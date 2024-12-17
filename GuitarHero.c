@@ -15,7 +15,7 @@
 #define CLS printf("\033[2J\033[1;1H");
 #define SPAUSE printf("Press any key to continue..."); PAUSE
 
-/* Struct definitions*/
+/* Struct definitions */
 typedef struct{
     int lin; // Position of the note (line)
     int col; // Position of the note (column)
@@ -29,27 +29,26 @@ typedef struct{
 /* Function declarations */
 void menu(); // Show main menu
 void start(); // Start the game
-void title(); // Type the title: "Guitar Hero"
-void option(int op); // Choose option
+void title(char *title); // Type the title: "Guitar Hero"
+void option(char op); // Choose option
 void play(); // Play the game
 void showRecords(); // Show player records
 void showRanking(); // Show players rankings
-int catchKey(); // Get user input
 void game(TNote note); // Game logic
 void exitGame(); // Exit the game
 
 int main(){
-    int op;
+    char op;
     srand((unsigned)time(NULL));
 
     CLS
     start();
-    do{
+    while(1){
         menu();
-        op = catchKey();
+        op = getch();
 
         option(op);
-    } while(op != 4);
+    }
 
     return 0;
 }
@@ -64,19 +63,19 @@ void menu(){
     printf("** Enter your choice: ");
 }
 
-void option(int op){
+void option(char op){
     CLS
     switch(op){
-        case 1:
+        case '1':
             play();
             break;
-        case 2:
+        case '2':
             showRecords();
             break;
-        case 3:
+        case '3':
             showRanking();
             break;
-        case 4:
+        case '4':
             exitGame();
             break;
         default:
@@ -149,16 +148,16 @@ void showRanking(){
 }
 
 void start(){
-    char *start_messages[3] = {"Connecting amplifiers", "Adjusting volume", "Tuning the guitar"};
+    const char *start_messages[3] = {"Connecting amplifiers", "Adjusting volume", "Tuning the guitar"};
     printf("%s...\n", start_messages[rand()%3]);
     for(int i = 0; i <= 50; i++){
         int percent = (i * 100) / 50;
 
         printf("\r[");
         for(int j = 0; j < 50; j++){
-            if (j < i){
+            if(j < i){
                 printf("#");
-            } else {
+            } else{
                 printf(" ");
             }
         }
@@ -167,6 +166,7 @@ void start(){
         fflush(stdout);
         Sleep(50);
     }
+    printf(" Ready!");
     sleep(1);
     CLS
     title("-- Guitar Hero --");
@@ -177,25 +177,17 @@ void title(char *title){
         printf("%c", title[i]);
         Sleep(100);
     }
-    printf("\n");
+    Sleep(500);
 }
 
 void exitGame(){
     char *exit_messages[3] = {"Saving the setlist", "Packing the gear", "Turning off the amps"};
     printf("%s", exit_messages[rand()%3]);
     for(int i = 0; i < 3; i++){
-        printf(".");
         Sleep(500);
+        printf(".");
     }
-}
 
-int catchKey(){
-    char choice;
-    int op;
+    exit(0);
 
-    choice = getch();
-    fflush(stdin);
-    op = atoi(&choice);
-
-    return op;
 }
